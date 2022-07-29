@@ -20,7 +20,7 @@ const uuidv4 =() => {
     });
 }
 
-function userSaver (e){
+function userSaver (e) {
     e.preventDefault();
     
 
@@ -28,11 +28,9 @@ function userSaver (e){
     let lastName = lastNameElement.value;
     let user = userElement.value;
     let password = passwordElement.value;
-    
-    
 
-    if (name !== "" && lastName !== "" && user !== "" && password !== "" && validatePassword(password.value)) {
-        
+    if(name !== '' && lastName !=='' && user !== '' && password !== '' && validatePassword(password)) {
+            
         let newUser = {
             name,
             lastName,
@@ -42,31 +40,34 @@ function userSaver (e){
             balance: 0,
             usuariosGuardados:[],
             serices: [],
-        }
+            }
         usersList.push(newUser);
-    
+        
         let users = JSON.stringify(usersList);
         localStorage.setItem('users', users)
-
-        location.href = "../../public/user/login.html";
-    } else {
-        if (!validatePassword(password.value)){
-        validacionElement.innerHTML = `La coontraseña tiene que tener una minúscula, una mayúscula, un numero y simbolo.`
-        }
-        registerErrorElement.innerHTML = `Por favor no deje ningún campo vacío` 
         
-        setTimeout(()=>{
-        registerErrorElement.remove()
-        },2000)
-    }
-    
-    
-}
+        location.href = "../../public/user/login.html";
+    }else {
+        if(validatePassword){
+            validacionElement.innerHTML = `La contraseña debe tener al menos 8 caracteres, una mayúscula, una minuscula, un número y un símbolo`;
 
-const validatePassword = (password) => {
+            setTimeout(()=>{
+                validacionElement.remove()
+            }, 2000)
+        }
+        if (name === '' || lastName ==='' || user === ''|| password === '' ) {
+            registerErrorElement.innerHTML = `Todos los campos deben estar completos`;
+        
+        setTimeout(()=> {
+            registerErrorElement.remove()
+        }, 2000)
+        }
+    } 
+}
+const validatePassword = (passwordElement) => {
     let re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
-    return re.test(password)
+    return re.test(passwordElement)
 }
 
-    
-formElement.addEventListener('submit', (e) => userSaver (e))
+
+formElement.addEventListener('submit', (e) => userSaver (e));
